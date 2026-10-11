@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ezzy AI — Calm Voice Assistant for Android + Web</title>
+<meta name="description" content="Ezzy AI is a calm, concise voice assistant: Groq-powered chat, spoken replies, 14 role presets, and optional on-device phone control. Try the live web demo.">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='38' fill='none' stroke='%234FD8FF' stroke-width='8'/><circle cx='50' cy='50' r='14' fill='%234FD8FF'/></svg>">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top"><span class="brand-orb" aria-hidden="true"></span>EZZY&nbsp;AI</a>
+    <nav class="links">
+      <a href="#features">Features</a>
+      <a href="#actions">Actions</a>
+      <a href="#roles">Roles</a>
+      <a href="#how">How it works</a>
+      <a href="#android">Android</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <button class="btn ghost" id="navSettings">Settings</button>
+      <a class="btn solid" href="#demo">Try live demo</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO + LIVE DEMO -->
+  <section class="hero wrap" id="demo">
+    <div class="hero-copy">
+      <p class="kicker">Voice assistant &middot; Android app &middot; Web demo</p>
+      <h1>A calm voice assistant that <span class="accent">does things</span>, not just chats.</h1>
+      <p class="lede">Ezzy AI talks to a Groq-powered brain, speaks replies aloud, and — on Android — can tap, type, scroll and open apps for you. This page is the finished website: read the story, then <strong>talk to the live demo on the right</strong>. Bring your own Groq key; it never leaves your browser.</p>
+      <div class="cta-row">
+        <button class="btn solid big" id="heroMic">🎙 Start talking</button>
+        <button class="btn ghost big" id="heroSettings">⚙ Connect Groq key</button>
+      </div>
+      <ul class="ticks">
+        <li><strong>Groq-compatible</strong> chat, JSON action loop</li>
+        <li><strong>Voice in + voice out</strong> (Web Speech + Fish Audio)</li>
+        <li><strong>14 role presets</strong> — CFO to SDR</li>
+        <li><strong>Keys stay on-device</strong> — localStorage only</li>
+      </ul>
+      <p class="micro" id="demoHint">Demo runs fully in your browser. Phone-control actions are Android-only and will say so.</p>
+    </div>
+
+    <!-- Phone mock = functional demo, mirrors activity_main.xml -->
+    <div class="phone" role="region" aria-label="Ezzy AI live demo">
+      <div class="phone-top">
+        <div>
+          <p class="phone-title">EZZY AI</p>
+          <p class="phone-status" id="status">ONLINE</p>
+        </div>
+        <button class="chip" id="settingsBtn">SETTINGS</button>
+      </div>
+      <canvas id="orb" width="520" height="420" aria-label="Ezzy orb"></canvas>
+      <div class="panel scroll" id="scroll"><div id="log" class="log"><p><strong>Ezzy:</strong> Tap the mic and speak — or type below. Open Settings and paste a Groq key (starts with <code>gsk_</code>) to wake me up.</p></div></div>
+      <div class="row2">
+        <span class="chip static" id="webNote">WEB DEMO</span>
+        <button class="chip toggle" id="handsfree" aria-pressed="false">HANDS-FREE: OFF</button>
+      </div>
+      <button class="chip role" id="roleBtn">ROLE: EZZY (GENERAL ASSISTANT)</button>
+      <div class="composer">
+        <input id="input" type="text" placeholder="Type instead — Enter to send" autocomplete="off" aria-label="Type a message">
+        <button id="mic" class="micbtn">MIC</button>
+      </div>
+      <p class="micro center" id="sttSupport"></p>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="strip">
+    <div class="wrap stats">
+      <div><strong>14</strong><span>role presets</span></div>
+      <div><strong>13</strong><span>phone + web actions</span></div>
+      <div><strong>2</strong><span>voices: Fish Audio + built-in</span></div>
+      <div><strong>0</strong><span>servers: keys stay with you</span></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="wrap section" id="features">
+    <p class="kicker">Why Ezzy</p>
+    <h2>Built like the Android app.<br>Finished as a website.</h2>
+    <div class="grid3">
+      <article class="card"><h3>🎙 Voice-first</h3><p>Speech recognition up front, spoken answers back. Hands-free mode keeps the conversation going until you say <em>goodbye</em> — just like <code>MainActivity</code> on Android.</p></article>
+      <article class="card"><h3>🧠 Groq brain, JSON loop</h3><p>Every reply is one JSON object — <code>{say, action, arg, done}</code>. The agent thinks, acts, reads the result, and repeats (up to 10 steps on Android, 6 here).</p></article>
+      <article class="card"><h3>📱 Real phone actions</h3><p>Open apps, tap labels, type, scroll, go back/home, torch, volume, battery, alarms, web &amp; YouTube search — via the <code>EzzyService</code> accessibility loop.</p></article>
+      <article class="card"><h3>🎭 14 roles</h3><p>One tap re-prompts the brain: CFO, investment researcher, DevOps monitor, recruiter, CSM, social manager, analyst, engineer, SDR, EA…</p></article>
+      <article class="card"><h3>🔊 Two voices</h3><p>Fish Audio neural voice when you add a key, instant built-in speech synthesis otherwise. Same fallback chain as <code>Voice.java</code>.</p></article>
+      <article class="card"><h3>🔒 Keys stay yours</h3><p>Groq + Fish keys live in the app's Settings (Android) or <code>localStorage</code> (here). Never committed, never proxied.</p></article>
+    </div>
+  </section>
+
+  <!-- ACTIONS -->
+  <section class="wrap section" id="actions">
+    <p class="kicker">What Ezzy can do</p>
+    <h2>One brain, thirteen verbs.</h2>
+    <p class="sub">Ported from <code>Brain.java</code> + <code>Actions.java</code>. On the web, <span class="pill">phone-only</span> actions explain themselves instead of failing silently.</p>
+    <div class="table-wrap">
+    <table class="atable">
+      <thead><tr><th>Action</th><th>Arg</th><th>Android</th><th>This web demo</th></tr></thead>
+      <tbody>
+        <tr><td><code>none</code></td><td>—</td><td>Answer only</td><td>Answer only</td></tr>
+        <tr><td><code>open_app</code></td><td>app name</td><td>Launches installed app</td><td><span class="pill">phone-only</span> explains + offers web search</td></tr>
+        <tr><td><code>tap</code></td><td>visible label</td><td>Accessibility tap (asks before send/pay/buy…)</td><td><span class="pill">phone-only</span></td></tr>
+        <tr><td><code>type</code></td><td>text</td><td>Types into focused field</td><td><span class="pill">phone-only</span></td></tr>
+        <tr><td><code>scroll</code></td><td>up / down</td><td>Scrolls screen</td><td>Scrolls this page ✨</td></tr>
+        <tr><td><code>back</code> / <code>home</code></td><td>—</td><td>System navigation</td><td><span class="pill">phone-only</span></td></tr>
+        <tr><td><code>web_search</code></td><td>query</td><td>Opens Google</td><td>Opens Google in new tab</td></tr>
+        <tr><td><code>youtube</code></td><td>query</td><td>Opens YouTube results</td><td>Opens YouTube in new tab</td></tr>
+        <tr><td><code>torch_on</code> / <code>torch_off</code></td><td>—</td><td>Camera flash</td><td>Screen-flash effect 🔦</td></tr>
+        <tr><td><code>battery</code></td><td>—</td><td>Battery %</td><td>Real % via Battery API if available</td></tr>
+        <tr><td><code>volume</code></td><td>0–100</td><td>Music stream volume</td><td>Demo volume for speech synthesis</td></tr>
+        <tr><td><code>alarm</code></td><td>HH:MM</td><td>System alarm</td><td>In-page timer + message</td></tr>
+        <tr><td><code>wait</code></td><td>—</td><td>Pauses 1.5s</td><td>Pauses 1.5s</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <!-- ROLES -->
+  <section class="wrap section" id="roles">
+    <p class="kicker">Role presets</p>
+    <h2>Pick a brain for the job.</h2>
+    <p class="sub">Exactly the 14 templates from <code>Templates.java</code>. Click any card to load it into the demo.</p>
+    <div class="grid3" id="roleGrid"></div>
+  </section>
+
+  <!-- HOW -->
+  <section class="wrap section" id="how">
+    <p class="kicker">Under the hood</p>
+    <h2>Think → act → look → repeat.</h2>
+    <div class="grid3">
+      <article class="card step"><span class="n">1</span><h3>You speak or type</h3><p>Android uses <code>SpeechRecognizer</code>; here we use the browser Web Speech API with a typed fallback. Either way the text joins a 24-message history.</p></article>
+      <article class="card step"><span class="n">2</span><h3>The brain answers in JSON</h3><p>System prompt + role prompt + time are POSTed to <code>api.groq.com/openai/v1/chat/completions</code> with <code>response_format: json_object</code>. Reply shape: <code>say / action / arg / done</code>.</p></article>
+      <article class="card step"><span class="n">3</span><h3>Ezzy acts, then speaks</h3><p><code>Agent.java</code> runs the action, feeds back <code>RESULT + SCREEN</code>, and loops. <code>Voice.java</code> prefers Fish Audio, falls back to built-in TTS. Sensitive taps ask first.</p></article>
+    </div>
+    <pre class="code">{"say": "Opened YouTube for lo-fi beats.",
+ "action": "youtube", "arg": "lo-fi beats to focus",
+ "done": true}</pre>
+  </section>
+
+  <!-- ANDROID -->
+  <section class="wrap section" id="android">
+    <p class="kicker">Android app</p>
+    <h2>Take Ezzy in your pocket.</h2>
+    <div class="split">
+      <div>
+        <ol class="olist">
+          <li>Upload the <strong>EzzyAI-ready</strong> package contents to a GitHub repo root (<code>app/</code>, <code>.github/</code>, <code>settings.gradle</code>…).</li>
+          <li>Open the repo's <strong>Actions → Build Ezzy AI → Run workflow</strong> (AGP 8.5.2, Gradle 8.7, Java 17, SDK 34, min API 26).</li>
+          <li>Download the <code>EzzyAI</code> artifact → <code>app-debug.apk</code> → install on Android 8.0+.</li>
+          <li>Open Settings in the app, paste your Groq key (<code>gsk_…</code>). Fish Audio key + voice ID optional.</li>
+          <li>Optional: enable Ezzy AI in Android Accessibility settings for screen reading + phone control.</li>
+        </ol>
+        <p class="warn">⚠️ Accessibility access can observe screen content and interact with apps — enable only if you understand that. Review every tap that could send, buy, pay, delete, publish or submit. Never use unattended control for banking.</p>
+      </div>
+      <div class="card spec">
+        <h3>Build spec</h3>
+        <ul>
+          <li>Android Gradle Plugin <strong>8.5.2</strong></li>
+          <li>Gradle <strong>8.7</strong> (via workflow)</li>
+          <li>Java <strong>17</strong> · compileSdk <strong>34</strong></li>
+          <li>minSdk <strong>26</strong> (Android 8.0)</li>
+          <li>Default model <code>openai/gpt-oss-20b</code></li>
+          <li>Default voice <code>5d9a5e88…</code> (Fish Audio)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY -->
+  <section class="wrap section" id="privacy">
+    <p class="kicker">Safety &amp; honesty</p>
+    <h2>What Ezzy won't do.</h2>
+    <div class="grid3">
+      <article class="card"><h3>🔑 No key harvesting</h3><p>Keys are entered on your device and stored locally. This site makes no backend calls — the browser talks to Groq/Fish directly.</p></article>
+      <article class="card"><h3>✋ Sensitive taps ask first</h3><p>Any tap matching send / pay / buy / order / delete / post / call… pops a confirmation. Declining cancels the step.</p></article>
+      <article class="card"><h3>🚫 No invented screens</h3><p>The brain only taps items listed after the word SCREEN, never invents figures, names or citations, and says what it would need instead.</p></article>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="wrap section" id="faq">
+    <p class="kicker">FAQ</p>
+    <h2>Quick answers.</h2>
+    <details open><summary>Where do I get a Groq API key?</summary><p>Create one at <a href="https://console.groq.com" target="_blank" rel="noopener">console.groq.com</a> (keys start with <code>gsk_</code>), then paste it in Settings on this page or in the Android app.</p></details>
+    <details><summary>Do I need Fish Audio?</summary><p>No. Without it Ezzy uses the built-in voice (Android TTS / browser speech synthesis). Add a Fish key + voice ID for the neural voice.</p></details>
+    <details><summary>Why does the web demo refuse some actions?</summary><p>Browsers can't tap other apps or read your screen. Those actions are Android-only via the Accessibility service; the demo says so and suggests an alternative.</p></details>
+    <details><summary>Which model is used?</summary><p>Default <code>openai/gpt-oss-20b</code>, editable in Settings. <code>gpt-oss</code> models automatically get <code>reasoning_effort: low</code> like the app.</p></details>
+    <details><summary>Is my conversation stored anywhere?</summary><p>No. History lives in memory (last 24 turns) and settings in your browser's localStorage. Clear Settings to wipe everything.</p></details>
+  </section>
+
+  <section class="wrap cta-end">
+    <h2>Ready? Say hi to Ezzy. 👋</h2>
+    <p>Bring a Groq key, pick a role, tap the mic.</p>
+    <div class="cta-row center"><a class="btn solid big" href="#demo">Back to live demo ↑</a></div>
+  </section>
+
+</main>
+
+<footer><div class="wrap foot">
+  <span><strong>EZZY AI</strong> · calm voice assistant · web edition mirrors the Android app (Brain / Agent / Voice / Templates)</span>
+  <span class="muted">Keys never leave your device · Demo: Groq + Fish Audio, direct from your browser</span>
+</div></footer>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-bg" id="modalBg" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <h3 id="mTitle">Ezzy AI settings</h3>
+    <p class="micro">Stored only in this browser (localStorage). Same fields as the Android app.</p>
+    <label>Your name<input id="fName" type="text" autocomplete="off"></label>
+    <label>Groq API key (starts with gsk_)<input id="fGroq" type="password" autocomplete="off" placeholder="gsk_…"></label>
+    <label>Fish Audio API key (optional)<input id="fFish" type="password" autocomplete="off" placeholder="sk-fish-…"></label>
+    <label>Fish Audio voice ID<input id="fVoice" type="text" autocomplete="off"></label>
+    <label>Brain model<input id="fModel" type="text" autocomplete="off"></label>
+    <div class="mrow">
+      <button class="btn ghost" id="mClear">Clear all</button>
+      <span class="sp"></span>
+      <button class="btn ghost" id="mCancel">Cancel</button>
+      <button class="btn solid" id="mSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ROLE PICKER MODAL -->
+<div class="modal-bg" id="roleBg" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="rTitle">
+    <h3 id="rTitle">Choose Ezzy's role</h3>
+    <div id="roleList" class="role-list"></div>
+    <div class="mrow"><span class="sp"></span><button class="btn ghost" id="rCancel">Cancel</button></div>
+  </div>
+</div>
+
+<div class="flash" id="flash" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>

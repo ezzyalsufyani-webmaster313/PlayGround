@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ezzy demo harness (stubbed Brain)</title>
+<link rel="stylesheet" href="styles.css">
+<script>
+/* Pre-seed settings so the auto-open modal never fires */
+localStorage.setItem("ezzy_name", "Dean");
+localStorage.setItem("ezzy_groq", "gsk_stub_demo_key");
+localStorage.setItem("ezzy_model", "openai/gpt-oss-20b");
+localStorage.setItem("ezzy_role", "0");
+
+/* Instant mock speech synthesis (headless has no audio) */
+class MockUtterance { constructor(t) { this.text = t; this.volume = 1; } }
+const mockSpeech = {
+  speak(u) { setTimeout(() => u.onend && u.onend(), 30); },
+  cancel() {}
+};
+Object.defineProperty(window, "speechSynthesis", { value: mockSpeech, configurable: true });
+window.SpeechSynthesisUtterance = MockUtterance;
+
+/* Record window.open instead of popping tabs */
+window.__opened = [];
+window.open = (url, t, f) => { window.__opened.push(url); return null; };
+
+/* Stubbed Brain: scripted Groq replies keyed off the last user message */
+const SCRIPT = [
+  [/hello/i, { say: "Hello Dean! I am online and ready.", action: "none", arg: "", done: true }],
+  [/mars rover/i, { say: "Searching the web for mars rover.", action: "web_search", arg: "mars rover", done: true }],
+  [/lo-?fi/i, { say: "Opening YouTube for lo-fi beats.", action: "youtube", arg: "lo-fi beats to focus", done: true }],
+  [/scroll/i, { say: "Scrolling down.", action: "scroll", arg: "down", done: true }],
+  [/battery/i, { say: "", action: "battery", arg: "", done: true }],
+  [/volume/i, { say: "", action: "volume", arg: "50", done: true }],
+  [/torch/i, { say: "Torch on.", action: "torch_on", arg: "", done: true }],
+  [/alarm/i, { say: "", action: "alarm", arg: "07:30", done: true }],
+  [/spotify/i, { say: "", action: "open_app", arg: "Spotify", done: true }],
+  [/send button/i, { say: "", action: "tap", arg: "send", done: true }]
+];
+const _fetch = window.fetch.bind(window);
+window.fetch = async (url, opts) => {
+  if (String(url).includes("api.groq.com")) {
+    const body = JSON.parse(opts.body);
+    const lastUser = body.messages.filter(m => m.role === "user").pop().content;
+    const hit = SCRIPT.find(([re]) => re.test(lastUser));
+    const reply = hit ? hit[1] : { say: "Got it.", action: "none", arg: "", done: true };
+    return { ok: true, status: 200, json: async () => ({ choices: [{ message: { content: JSON.stringify(reply) } }] }) };
+  }
+  return _fetch(url, opts);
+};
+</script>
+</head>
+<body>
+<div class="wrap" id="demo">
+  <div class="phone" role="region" aria-label="Ezzy AI demo harness">
+    <div class="phone-top">
+      <div><p class="phone-title">EZZY AI</p><p class="phone-status" id="status">ONLINE</p></div>
+      <button class="chip" id="settingsBtn">SETTINGS</button>
+    </div>
+    <canvas id="orb" width="520" height="420"></canvas>
+    <div class="panel scroll" id="scroll"><div id="log" class="log"></div></div>
+    <div class="row2">
+      <span class="chip static">WEB DEMO</span>
+      <button class="chip toggle" id="handsfree">HANDS-FREE: OFF</button>
+    </div>
+    <button class="chip role" id="roleBtn">ROLE</button>
+    <div class="composer">
+      <input id="input" type="text" autocomplete="off">
+      <button id="mic" class="micbtn">MIC</button>
+    </div>
+    <p class="micro center" id="sttSupport"></p>
+  </div>
+  <div class="grid3" id="roleGrid"></div>
+</div>
+<button id="heroMic" hidden></button>
+<button id="heroSettings" hidden></button>
+<button id="navSettings" hidden></button>
+<div class="modal-bg" id="modalBg" hidden>
+  <div class="modal"><h3>settings</h3>
+    <input id="fName"><input id="fGroq" type="password"><input id="fFish" type="password">
+    <input id="fVoice"><input id="fModel">
+    <button id="mClear">c</button><button id="mCancel">c</button><button id="mSave">s</button>
+  </div>
+</div>
+<div class="modal-bg" id="roleBg" hidden>
+  <div class="modal"><div id="roleList"></div><button id="rCancel">c</button></div>
+</div>
+<div class="flash" id="flash" hidden></div>
+<script src="app.js"></script>
+<script>
+/* Driver: plays the full demo through the REAL app.js, then stamps DONE */
+window.__demoDone = false;
+window.addEventListener("load", async () => {
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const micIdle = async () => {
+    for (let i = 0; i < 200; i++) {
+      if (!document.getElementById("mic").disabled) return;
+      await sleep(100);
+    }
+  };
+  await sleep(800);
+  const msgs = ["Hello Ezzy", "Search the web for mars rover", "Find lo-fi beats on YouTube",
+    "Scroll down please", "What is my battery level", "Set volume to 50",
+    "Turn the torch on", "Set an alarm for 07:30", "Open Spotify", "Tap the send button"];
+  const box = document.getElementById("input");
+  for (const m of msgs) {
+    await micIdle();
+    box.value = m;
+    box.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    await sleep(400);
+  }
+  await micIdle();
+  /* role switch proves Templates wiring */
+  document.querySelectorAll("#roleGrid .card")[9].querySelector("button").click();
+  await sleep(300);
+  /* settings modal open/save proves Prefs wiring */
+  document.getElementById("settingsBtn").click();
+  await sleep(200);
+  document.getElementById("fName").value = "Demo";
+  document.getElementById("mSave").click();
+  await sleep(300);
+  window.__demoDone = true;
+  document.title = "DEMO_DONE";
+});
+</script>
+</body>
+</html>
