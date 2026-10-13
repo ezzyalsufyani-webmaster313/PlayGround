@@ -1,0 +1,6 @@
+node_modules/
+*.log
+unity/Library/
+unity/Temp/
+unity/Logs/
+unity/UserSettings/

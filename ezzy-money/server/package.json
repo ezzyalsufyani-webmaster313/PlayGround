@@ -1,0 +1,12 @@
+{
+  "name": "ezzy-money-mod-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Browser upload page and pairing API for Ezzy Money mods",
+  "main": "src/server.js",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.js"
+  }
+}

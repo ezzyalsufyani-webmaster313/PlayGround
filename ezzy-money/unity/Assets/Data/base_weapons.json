@@ -1,0 +1,10 @@
+{
+  "weapons": [
+    { "id": "pistol_p9", "name": "P9 Pistol", "damage": 25, "fireRate": 4, "magazine": 15, "model": "base/pistol_p9" },
+    { "id": "smg_hornet", "name": "Hornet SMG", "damage": 18, "fireRate": 12, "magazine": 30, "model": "base/smg_hornet" },
+    { "id": "shotgun_breaker", "name": "Breaker Shotgun", "damage": 90, "fireRate": 1.2, "magazine": 8, "model": "base/shotgun_breaker" },
+    { "id": "rifle_ar7", "name": "AR-7 Rifle", "damage": 32, "fireRate": 9, "magazine": 30, "model": "base/rifle_ar7" },
+    { "id": "sniper_longshot", "name": "Longshot Sniper", "damage": 150, "fireRate": 0.8, "magazine": 5, "model": "base/sniper_longshot" },
+    { "id": "bat", "name": "Baseball Bat", "damage": 35, "fireRate": 1.5, "magazine": 0, "model": "base/bat" }
+  ]
+}

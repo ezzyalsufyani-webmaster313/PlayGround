@@ -1,0 +1,10 @@
+{
+  "id": "ezzy.jetpack",
+  "name": "Jetpack",
+  "version": "1.0.0",
+  "author": "Ezzy",
+  "gameVersion": "0.1",
+  "description": "Adds a spawnable jetpack and a button for it in the mod menu.",
+  "permissions": ["spawn", "hud", "input", "player"],
+  "entry": "scripts/main.lua"
+}

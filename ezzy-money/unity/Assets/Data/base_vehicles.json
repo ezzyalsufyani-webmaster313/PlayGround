@@ -1,0 +1,10 @@
+{
+  "vehicles": [
+    { "id": "sedan_marlow", "name": "Marlow Sedan", "class": "car", "massKg": 1450, "maxSpeedKmh": 190, "model": "base/sedan_marlow" },
+    { "id": "muscle_vigor", "name": "Vigor Muscle", "class": "car", "massKg": 1650, "maxSpeedKmh": 230, "model": "base/muscle_vigor" },
+    { "id": "super_strata", "name": "Strata GT", "class": "car", "massKg": 1350, "maxSpeedKmh": 320, "model": "base/super_strata" },
+    { "id": "suv_ridge", "name": "Ridge SUV", "class": "car", "massKg": 2200, "maxSpeedKmh": 180, "model": "base/suv_ridge" },
+    { "id": "bike_kite", "name": "Kite 600", "class": "bike", "massKg": 190, "maxSpeedKmh": 250, "model": "base/bike_kite" },
+    { "id": "boat_wake", "name": "Wake Speedboat", "class": "boat", "massKg": 1200, "maxSpeedKmh": 110, "model": "base/boat_wake" }
+  ]
+}

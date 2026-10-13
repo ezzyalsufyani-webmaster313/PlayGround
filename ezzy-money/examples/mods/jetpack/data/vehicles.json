@@ -1,0 +1,13 @@
+{
+  "vehicles": [
+    {
+      "id": "jetpack",
+      "name": "Jetpack",
+      "class": "air",
+      "massKg": 25,
+      "maxSpeedKmh": 90,
+      "thrustN": 900,
+      "model": "assets/jetpack.bundle"
+    }
+  ]
+}

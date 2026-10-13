@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ezzy Money Mods</title>
+<style>
+  :root { --bg: #0f1115; --panel: #181b22; --text: #eef0f4; --muted: #9aa3b2; --accent: #2fbf71; --bad: #ff6b6b; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 480px; margin: 0 auto; padding: 32px 16px; }
+  h1 { margin: 0 0 4px; font-size: 28px; }
+  p { color: var(--muted); margin: 0 0 24px; }
+  label { display: block; font-weight: 600; margin-bottom: 8px; }
+  input[type=text] { width: 100%; padding: 14px; font-size: 24px; letter-spacing: 8px; text-align: center;
+    background: var(--panel); color: var(--text); border: 1px solid #2a2f3a; border-radius: 10px; margin-bottom: 20px; }
+  .drop { border: 2px dashed #2a2f3a; border-radius: 12px; padding: 32px 16px; text-align: center; color: var(--muted); cursor: pointer; }
+  .drop.over { border-color: var(--accent); color: var(--text); }
+  button { width: 100%; margin-top: 20px; padding: 14px; font-size: 16px; font-weight: 600; border: 0; border-radius: 10px;
+    background: var(--accent); color: #06130c; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+  #result { margin-top: 20px; white-space: pre-line; }
+  .ok { color: var(--accent); } .bad { color: var(--bad); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Ezzy Money Mods</h1>
+  <p>In the game, open the mod menu and tap <b>Add from browser</b> to get a code. Then upload your mod .zip here.</p>
+
+  <label for="code">Code from the game</label>
+  <input id="code" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="off">
+
+  <label>Mod file</label>
+  <div id="drop" class="drop">Drop a .zip here or tap to choose</div>
+  <input id="file" type="file" accept=".zip" hidden>
+
+  <button id="send" disabled>Send to game</button>
+  <div id="result"></div>
+</main>
+<script>
+  const code = document.getElementById('code');
+  const drop = document.getElementById('drop');
+  const fileInput = document.getElementById('file');
+  const send = document.getElementById('send');
+  const result = document.getElementById('result');
+  let file = null;
+
+  function refresh() { send.disabled = !(file && /^\d{6}$/.test(code.value)); }
+  function pick(f) {
+    if (!f) return;
+    file = f;
+    drop.textContent = f.name + ' (' + (f.size / 1048576).toFixed(1) + ' MB)';
+    refresh();
+  }
+  code.addEventListener('input', () => { code.value = code.value.replace(/\D/g, ''); refresh(); });
+  drop.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => pick(fileInput.files[0]));
+  drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('over'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+  drop.addEventListener('drop', (e) => { e.preventDefault(); drop.classList.remove('over'); pick(e.dataTransfer.files[0]); });
+
+  send.addEventListener('click', async () => {
+    send.disabled = true;
+    result.className = '';
+    result.textContent = 'Checking and sending…';
+    try {
+      const res = await fetch('/api/upload?code=' + code.value, { method: 'POST', body: file });
+      const body = await res.json();
+      if (body.ok) {
+        result.className = 'ok';
+        result.textContent = body.manifest.name + ' ' + body.manifest.version + ' is on its way. Accept it in the game.';
+      } else {
+        result.className = 'bad';
+        result.textContent = 'Not sent:\n' + body.errors.join('\n');
+      }
+    } catch (e) {
+      result.className = 'bad';
+      result.textContent = 'Upload failed. Check your connection and try again.';
+    }
+    refresh();
+  });
+</script>
+</body>
+</html>
